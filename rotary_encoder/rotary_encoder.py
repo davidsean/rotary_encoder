@@ -126,7 +126,7 @@ class RotaryEncoder:
         push_state = self.gpio.read(self.push_pin)
         if time.time() - self.push_called > self.push_time:
             if push_state == 0:
-                self._push_callback()
+                self._push_cback()
         self.push_called = time.time()
 
     def _rotate_filter_cback(self):

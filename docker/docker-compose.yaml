@@ -1,0 +1,36 @@
+version: '3.9'
+
+services:
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management-alpine
+    ports:
+        - 5672:5672
+        - 15672:15672
+    networks:
+        - bridge
+    environment:
+      - RABBITMQ_DEFAULT_USER=rotary_encoder
+      - RABBITMQ_DEFAULT_PASS=rotary_encoder
+
+  rotary_encoder:
+    container_name: rotary_encoder
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ../:/app
+    depends_on:
+      - rabbitmq
+    networks:
+      - bridge
+    environment:
+      - AMQP_HOST=rabbitmq
+      - AMQP_PORT=5672
+      - USER=rotary_encoder
+      - PASS=rotary_encoder
+
+networks:
+  bridge:
+    driver: bridge

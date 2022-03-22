@@ -3,3 +3,9 @@ Reading input form a rotary encoder with an implementation of John Main's softwa
 
 The idea is to filter inputs through a table of physicaly "legal" moves and ignore input combinations that cannot come from normal operation (i.e., inputs combinations that arise from bouncing).
 
+
+# docker stack
+```bash
+docker compose -f docker/docker-compose.yaml build
+docker compose -f docker/docker-compose.yaml up
+```

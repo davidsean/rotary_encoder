@@ -2,12 +2,17 @@
 
 import time
 import logging
+from typing import Callable
+
 import pigpio
 
 import numpy as np
-from typing import Callable
+
 
 class RotaryEncoder:
+    """ Rotary encoder claass
+
+    """
 
     # use rotational encoding table for software debouncing
     # see https://www.best-microcontroller-projects.com/rotary-encoder.html
@@ -86,7 +91,10 @@ class RotaryEncoder:
             "registered callback on pin %s %s %s",
             self.push_pin, self.clk_pin, self.dt_pin)
 
-        self._logger.debug("Instantiation successful")
+        self._logger.info("Instantiation successful")
+
+    def __del__(self):
+        self._logger.info("Instance destroyed")
 
     def _read_rotary(self):
         """
@@ -105,14 +113,14 @@ class RotaryEncoder:
 
         self.prev_next_code <<= np.uint8(2)
         self.prev_next_code &= np.uint8(0x0f)  # just hold to the 4 LSB
-        if (clk_state):
+        if clk_state:
             self.prev_next_code |= np.uint8(0x02)
-        if (dt_state):
+        if dt_state:
             self.prev_next_code |= np.uint8(0x01)
         self.prev_next_code &= np.uint8(0x0f)  # just hold to the 4 LSB
 
         # If valid then store as 16 bit data.
-        if (self.rot_enc_table[self.prev_next_code]):
+        if self.rot_enc_table[self.prev_next_code]:
             self.store <<= np.uint16(4)
             self.store |= self.prev_next_code
             if (self.store & 0xff) == 0x2b:
